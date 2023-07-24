@@ -1,0 +1,14 @@
+{% extends "main/base.html" %}
+
+{% block title %}
+Поиск слова
+{% endblock %}
+
+{% block content %}
+<h1>Введите то, о чём хотите узнать на Wikipedia</h1>
+<form  method="GET">
+  <input class="form-control mr-sm-2" type="text" name="q" placeholder="Введите слово...">
+  <button class="btn btn-success my-2 my-sm-1" type="submit">Поиск</button>
+</form>
+
+{% endblock %}

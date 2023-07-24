@@ -1,0 +1,30 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+  <h1>Ваши задачи</h1>
+{% if user.is_authenticated %}
+  {% if tasks %}
+    {% for task in tasks %}
+      <div class="alert alert-warning mt-2">
+        <h3>{{ task.title }} </h3>
+        <p>{{ task.task }}</p>
+        <form action="{% url 'delete' task.id %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Удалить</button>
+        </form>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>У вас нет никаких задач</p>
+  {% endif %}
+{% else %}
+    <p>У вас нет никаких задач</p>
+{% endif %}
+{% endblock %}
+
+

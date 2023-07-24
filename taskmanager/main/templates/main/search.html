@@ -1,0 +1,24 @@
+{% extends "main/base.html" %}
+
+
+{% block content %}
+    <h1>Найденные задачи</h1>
+    {% if tasks %}
+        <ul>
+            {% for task in tasks %}
+                <div class="alert alert-warning mt-2">
+                    <h3>{{ task.title }} </h3>
+                    <p>{{ task.task }}</p>
+                    {% block content1 %}
+                        <form action="{% url 'delete' task.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                         </form>
+                    {% endblock %}
+                </div>
+            {% empty %}
+                <li>Задачи не найдены</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
