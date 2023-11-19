@@ -1,8 +1,9 @@
 {% extends "main/base.html" %}
 
 
+
 {% block content %}
-    <h1>Найденные задачи</h1>
+    <h1>Найденные пометки</h1>
     {% if tasks %}
         <ul>
             {% for task in tasks %}
@@ -17,7 +18,7 @@
                     {% endblock %}
                 </div>
             {% empty %}
-                <li>Задачи не найдены</li>
+                <li>Пометки не найдены</li>
             {% endfor %}
         </ul>
     {% endif %}

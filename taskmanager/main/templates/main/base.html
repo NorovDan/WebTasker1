@@ -15,12 +15,11 @@
       <nav class="my-2 my-md-0 mr-md-3">
         <a class="btn btn-primary" href="{% url 'home' %}">Главная</a>
         <a class="btn btn-primary" href="{% url 'about' %}">Про сайт</a>
-          <a class="btn btn-primary" href="{% url 'create' %}">Создать задачу</a>
-          <a class="btn btn-primary" href="{% url 'wikipedia_search' %}">Поиск</a>
+          <a class="btn btn-primary" href="{% url 'create' %}">Создать пометку</a>
           <button class="btn btn-light" onclick="changeTheme('light')">Светлая тема</button>
           <button class="btn btn-dark" onclick="changeTheme('dark')">Темная тема</button>
-          <form class="my-2" action="{% url 'search' %}"  method="GET">
-            <input  type="text" name="q" placeholder="Поиск">
+          <form target="_blank" class="my-2" action="{% url 'search' %}" method="GET">
+            <input type="text" name="q"  placeholder="Поиск">
             <button class="btn btn-secondary" type="submit">Найти</button>
           </form>
           {% if user.is_authenticated %}

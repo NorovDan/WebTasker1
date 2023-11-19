@@ -1,14 +1,15 @@
 {% extends "main/base.html" %}
-
 {% block title %}
-Поиск слова
+Поиск
 {% endblock %}
 
 {% block content %}
-<h1>Введите то, о чём хотите узнать на Wikipedia</h1>
-<form  method="GET">
-  <input class="form-control mr-sm-2" type="text" name="q" placeholder="Введите слово...">
-  <button class="btn btn-success my-2 my-sm-1" type="submit">Поиск</button>
-</form>
 
+    {% if extract %}
+        <h2>Результат поиска:</h2>
+        <p>{{ extract }}</p>
+    {% else %}
+        <h2>Ничего не найдено</h2>
+    {% endif %}
 {% endblock %}
+

@@ -6,6 +6,7 @@ import webbrowser
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+import requests
 
 
 @login_required(login_url='login')
@@ -45,24 +46,54 @@ def delete(request, task_id):
         return redirect('/')
     return render(request, 'delete.html', {'task': task})
 
-
+@login_required(login_url='login')
 def search(request):
     query = request.GET.get('q')
     tasks = None
+    wikipedia_query = None
+
 
     if query:
         tasks = Task.objects.filter(Q(title__icontains=query) | Q(task__icontains=query), user=request.user)
 
-    return render(request, 'main/search.html', {'tasks': tasks, 'query': query})
+    if request.method == 'GET':
+        if query and query.startswith('@'):
+            wikipedia_query = query[1:]
+            # Выполняем запрос к API Википедии на русском языке
+            url = f'https://ru.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro&explaintext&titles={wikipedia_query}'
+            response = requests.get(url)
+            data = response.json()
+
+            # Парсим результаты запроса
+            pages = data['query']['pages']
+            page_id = next(iter(pages))
+            extract = pages[page_id]['extract']
+
+            return render(request, 'main/wikipedia_search.html',{'tasks': tasks, 'query': query, 'wikipedia_query': wikipedia_query, 'extract': extract})
+
+        return render(request, 'main/search.html', {'tasks': tasks, 'query': query, 'wikipedia_query': wikipedia_query})
+
+
 
 @login_required(login_url='login')
 def wikipedia_search(request):
-    query = request.GET.get('q')
+    if request.method == 'GET':
+        query = request.GET.get('query')
+        if query:
+            # Выполняем запрос к API Википедии на русском языке
+            url = f'https://ru.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro&explaintext&titles={query}'
+            response = requests.get(url)
+            data = response.json()
 
-    if query:
-        url = f"https://ru.wikipedia.org/wiki/{query}"
-        webbrowser.open_new_tab(url)
-    return render(request, 'main/wikipedia_search.html')
+            # Парсим результаты запроса
+            pages = data['query']['pages']
+            page_id = next(iter(pages))
+            extract = pages[page_id]['extract']
+
+
+            return render(request, 'main/wikipedia_search.html', {'extract': extract})
+        else:
+            return render(request, 'main/wikipedia_search.html', {'extract': None})
 
 def register(request):
     if request.method == 'POST':
